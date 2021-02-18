@@ -24,7 +24,7 @@ Polyclinic* addNewRecord(Polyclinic*, Polyclinic); //выделение памяти под новую 
 void enterNewRecord(Polyclinic&); //ввод новой записи в единичную структуру потом она будет записана в addNewRecord()
 void showAllRecords(Polyclinic*); //показывает все записи в памяти
 void exitAndSave(Polyclinic*); // запись базы из памяти на диск при выходе
-Polyclinic* loadRecords(Polyclinic*); //загрузка данных из файлаб вывод их на экран и загрузка в пямять для работы
+Polyclinic* loadRecords(Polyclinic*); //загрузка данных из файла и вывод их на экран и загрузка в пямять для работы
 void qualificationFilter(Polyclinic*);  //фильтрует вывод по квалификации
 void specialtyFilter(Polyclinic*); //фильтрует вывод по специальности
 void showRecordHeader(const char*); //вспомогательная функция - печать заголовка таблицы
@@ -52,7 +52,7 @@ int main()
 		switch (choice)
 		{
 		case 1:
-			enterNewRecord(temp);
+			enterNewRecord(temp); //передаем ссылку, по окончании функции temp будет с данными enterNewRecord(Polyclinic&)
 			myPolyclinic = addNewRecord(myPolyclinic, temp);
 			break;
 		case 2:
