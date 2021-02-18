@@ -29,6 +29,7 @@ void qualificationFilter(Polyclinic*);  //фильтрует вывод по квалификации
 void specialtyFilter(Polyclinic*); //фильтрует вывод по специальности
 void showRecordHeader(const char*); //вспомогательная функция - печать заголовка таблицы
 void showOneRecord(Polyclinic, int); //вспомогательная функция - печать одной записи
+Polyclinic* sortRecordsByAlpha(Polyclinic* P); //Сортировка базы (в памяти) в алфавитном порядке
 int menu(); //Меню функций базы
 
 
@@ -63,6 +64,9 @@ int main()
 		case 4:
 			specialtyFilter(myPolyclinic);
 			break;
+		case 5:
+			myPolyclinic = sortRecordsByAlpha(myPolyclinic);
+			break;
 
 		default:
 			break;
@@ -74,6 +78,26 @@ int main()
 
 	delete[] temp.fio;
 } // main()
+
+Polyclinic* sortRecordsByAlpha(Polyclinic* P) //Сортировка базы (в памяти) в алфавитном порядке
+{
+	int i, j, amount = P->totalRecords;
+
+	Polyclinic T;
+
+	for (i = 0; i < amount; ++i) {
+		for (j = i + 1; j < amount; ++j) {
+			if (strcmp(P[i].fio, P[j].fio)>0) {
+				T = P[i];
+				P[i] = P[j];
+				P[j] = T;
+			}
+		} //for j
+	} //for i
+
+	showAllRecords(P);
+	return P;
+}
 
 void qualificationFilter(Polyclinic* P)  //Фильтрует вывод по квалификации
 { 
@@ -239,6 +263,7 @@ int menu() //Меню функций базы
 	cout << "2 - Показать все записи" << endl;
 	cout << "3 - Фильтр по квалификации" << endl;
 	cout << "4 - Фильтр по специальности" << endl;
+	cout << "5 - Сортировка в алфавитном порядке" << endl;
 	cout << "0 - Выход из программы и запись" << endl;
 	cout << "----------------------------------" << endl;
 
@@ -247,7 +272,7 @@ int menu() //Меню функций базы
 		cout << "Введите номер пункта меню: ";
 		cin >> select;
 		cin.get();
-	} while (select < 0 || select > 4);
+	} while (select < 0 || select > 5);
 
 	return select;
 } // menu()
