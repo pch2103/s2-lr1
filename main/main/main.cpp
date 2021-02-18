@@ -25,6 +25,10 @@ void enterNewRecord(Polyclinic&); //ввод новой записи в единичную структуру пото
 void showAllRecords(Polyclinic*); //показывает все записи в памяти
 void exitAndSave(Polyclinic*); // запись базы из памяти на диск при выходе
 Polyclinic* loadRecords(Polyclinic*); //загрузка данных из файлаб вывод их на экран и загрузка в пямять для работы
+void qualificationFilter(Polyclinic*);  //фильтрует вывод по квалификации
+void specialtyFilter(Polyclinic*); //фильтрует вывод по специальности
+void showRecordHeader(const char*); //вспомогательная функция - печать заголовка таблицы
+void showOneRecord(Polyclinic, int); //вспомогательная функция - печать одной записи
 int menu(); //Меню функций базы
 
 
@@ -53,6 +57,12 @@ int main()
 		case 2:
 			showAllRecords(myPolyclinic);
 			break;
+		case 3:
+			qualificationFilter(myPolyclinic);
+			break;
+		case 4:
+			specialtyFilter(myPolyclinic);
+			break;
 
 		default:
 			break;
@@ -64,6 +74,52 @@ int main()
 
 	delete[] temp.fio;
 } // main()
+
+void qualificationFilter(Polyclinic* P)  //Фильтрует вывод по квалификации
+{ 
+	int qual;
+
+	do
+	{
+		cout << "=====================================================" << endl;
+		cout << "Код квалификации (0-высшая, 1-первая, 2-вторая): ";
+		cin >> qual;
+		cin.get();
+	} while (qual < 0 || qual > 2);
+	cout << "=====================================================" << endl;
+
+	showRecordHeader("Фильтр по квалификации:");
+
+	for (int i = 0; i < P->totalRecords; ++i) {
+		if (qual == P[i].qualification) {
+			showOneRecord(P[i], i + 1);
+		}
+	} //for
+	cout << "===================================================================" << endl;
+} //qualificationFilter()
+
+void specialtyFilter(Polyclinic* P)  //Фильтрует вывод по специальности
+{
+	int spec;
+
+	do
+	{
+		cout << "=====================================================" << endl;
+		cout << "Код специальности (1-терапевт, 2-кардиолог, 3-стоматолог): ";
+		cin >> spec;
+		cin.get();
+	} while (spec < 0 || spec > 2);
+	cout << "=====================================================" << endl;
+
+	showRecordHeader("Фильтр по специальности:");
+
+	for (int i = 0; i < P->totalRecords; ++i) {
+		if (spec == P[i].specialty) {
+			showOneRecord(P[i], i + 1);
+		}
+	} //for
+	cout << "===================================================================" << endl;
+} //qualificationFilter()
 
 void exitAndSave(Polyclinic* P) // запись базы из памяти на диск при выходе
 {
@@ -105,38 +161,11 @@ Polyclinic* loadRecords(Polyclinic* P) //загрузка данных из файлаб вывод их на э
 void showAllRecords(Polyclinic* P) //показывает все записи в памяти
 
 {
-	cout << endl << "===================================================================" << endl;
-	cout << "Все записи в базе поликлиники:";
-	cout << endl << "===================================================================" << endl;
-	cout.setf(ios::left);
-	cout.width(6);
-	cout << " №";
-	cout.setf(ios::left);
-	cout.width(FIO_WITH);
-	cout << "ФИО врача";
-	cout.setf(ios::left);
-	cout.width(16);
-	cout << "Cпециальность";
-	cout.setf(ios::left);
-	cout.width(16);
-	cout << "Квалификация";
-	cout << endl << "===================================================================" << endl;
+	showRecordHeader("Все записи в базе поликлиники:");
+
 	for (int i = 0; i < P->totalRecords; ++i) {
-		cout.setf(ios::left);
-		cout << " ";
-		cout.width(5);
-		cout << i + 1;
-		cout.setf(ios::left);
-		cout.width(FIO_WITH);
-		cout << P[i].fio;
-		cout.setf(ios::left);
-		cout.width(16);
-		cout << P[i].specialty;
-		cout.setf(ios::left);
-		cout.width(16);
-		cout << P[i].qualification;
-		cout << endl;
-	}
+		showOneRecord(P[i], i+1);
+	} //for
 	cout << "===================================================================" << endl;
 }// showAllRecords()
 
@@ -218,7 +247,45 @@ int menu() //Меню функций базы
 		cout << "Введите номер пункта меню: ";
 		cin >> select;
 		cin.get();
-	} while (select < 0 || select > 2);
+	} while (select < 0 || select > 4);
 
 	return select;
 } // menu()
+
+void showRecordHeader(const char* title) //вспомогательная функция - печать заголовка таблицы
+{
+	cout << endl << "===================================================================" << endl;
+	cout << title;
+	cout << endl << "===================================================================" << endl;
+	cout.setf(ios::left);
+	cout.width(6);
+	cout << " №";
+	cout.setf(ios::left);
+	cout.width(FIO_WITH);
+	cout << "ФИО врача";
+	cout.setf(ios::left);
+	cout.width(16);
+	cout << "Cпециальность";
+	cout.setf(ios::left);
+	cout.width(16);
+	cout << "Квалификация";
+	cout << endl << "===================================================================" << endl;
+}
+
+void showOneRecord(Polyclinic Record, int number = 1) //вспомогательная функция - печать одной записи
+{
+	cout.setf(ios::left);
+	cout << " ";
+	cout.width(5);
+	cout << number;
+	cout.setf(ios::left);
+	cout.width(FIO_WITH);
+	cout << Record.fio;
+	cout.setf(ios::left);
+	cout.width(16);
+	cout << Record.specialty;
+	cout.setf(ios::left);
+	cout.width(16);
+	cout << Record.qualification;
+	cout << endl;
+}
